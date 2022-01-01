@@ -4,6 +4,8 @@ description: |
   Event objects are a simple way to implement dosing or other interventions
   into your simulation. They are created with special constructors and elementary
   events can be combined in different ways to create complex dosing regimens.
+categories:
+  - events
 date: 2019-01-17
 output: 
   distill::distill_article:
@@ -11,6 +13,7 @@ output:
     highlight: pygments
     highlight_downlit: false 
     theme: dist.css
+    
 ---
 
 
@@ -110,7 +113,7 @@ e3 %then% e2
 Notice that `e3` has both `ii` and `addl` defined.  This is required for `mrgsolve` to know when to start `e2`.
 
 
-# Combine event objects to create a data set
+# Combine to create a data set
 
 We can take several event objects and combine them into a single simulation data frame with the `as_data_set` function.
 

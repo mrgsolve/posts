@@ -5,6 +5,8 @@ description: |
   individuals are classified in to two or more populations with 
   a certain probability. It is straightforward to simulate from models like 
   these in your `mrgsolve` model code.
+categories: 
+  - mixture model
 date: 2017-02-01
 output: 
   distill::distill_article: 
