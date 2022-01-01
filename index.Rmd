@@ -1,0 +1,6 @@
+---
+title: "mrgsolve blog"
+site: distill::distill_website
+theme: dist.css
+listing: posts
+---
