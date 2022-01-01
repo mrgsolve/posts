@@ -2128,7 +2128,25 @@
 
   /*-- Additional custom styles --*/
   /* Add any additional CSS rules below                      */
-  </style>
+  pre {
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border: 0;
+    padding: 16px;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 18px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  pre:not([class]) {
+    background-color: #f6f8fa;
+  }</style>
   <style type="text/css">
   /* base style */
 
@@ -2477,6 +2495,42 @@ function init_posts_list() {
 <div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
 <div class="posts-list">
 <h1 class="posts-list-caption" data-caption="mrgsolve blog">mrgsolve blog</h1>
+<a href="posts/2021-05-11-new-0-11-0/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":["what's new"]}</script>
+<div class="metadata">
+<div class="publishedDate">May 11, 2021</div>
+<div class="dt-authors"></div>
+</div>
+<div class="thumbnail">
+<img src="posts/2021-05-11-new-0-11-0/distill-preview.png"/>
+</div>
+<div class="description">
+<h2>New in 0.11.0 and 0.11.1</h2>
+<div class="dt-tags">
+<div class="dt-tag">what's new</div>
+</div>
+<p>Changes and new features for mrgsolve versions 0.11.0 and 0.11.1.</p>
+</div>
+</a>
+<a href="posts/2020-12-20-recover/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":["new feature"]}</script>
+<div class="metadata">
+<div class="publishedDate">Dec. 20, 2020</div>
+<div class="dt-authors"></div>
+</div>
+<div class="thumbnail">
+<img src="posts/2020-12-20-recover/distill-preview.png"/>
+</div>
+<div class="description">
+<h2>Recover non-numeric data columns from data/idata sets</h2>
+<div class="dt-tags">
+<div class="dt-tag">new feature</div>
+</div>
+<p>For a long time, we've had `carry_out`, which copies numeric input data set 
+items into your simulated output. Now, `recover` does the same thing but will
+carry any data type from the input to output data.</p>
+</div>
+</a>
 <a href="posts/2019-01-17-events/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":["events"]}</script>
 <div class="metadata">
@@ -2523,7 +2577,7 @@ these in your `mrgsolve` model code.</p>
 <ul>
 <li>
 <a href="#category:articles">articles</a>
-<span class="category-count">(2)</span>
+<span class="category-count">(4)</span>
 </li>
 <li>
 <a href="#category:events">events</a>
@@ -2531,6 +2585,14 @@ these in your `mrgsolve` model code.</p>
 </li>
 <li>
 <a href="#category:mixture_model">mixture model</a>
+<span class="category-count">(1)</span>
+</li>
+<li>
+<a href="#category:new_feature">new feature</a>
+<span class="category-count">(1)</span>
+</li>
+<li>
+<a href="#category:what&#39;s_new">what's new</a>
 <span class="category-count">(1)</span>
 </li>
 </ul>
