@@ -5,8 +5,18 @@ description: |
 output_dir: "docs"
 navbar:
   right:
+    - text: Posts
+      href: https://mrgsolve.github.io/posts
     - text: "Home"
-      href: index.html
+      href: https://mrgsolve.org
+    - text: "Resources"
+      menu: 
+        - text: User Guide
+          href: https://mrgsolve.github.io/user_guide
+        - text: Documentation
+          href: https://mrgsolve.github.io/docs
+        - text: Gallery
+          href: https://github.com/mrgsolve/gallery
     - text: "About"
       href: about.html
   source_url: https://github.com/mrgsolve/posts
