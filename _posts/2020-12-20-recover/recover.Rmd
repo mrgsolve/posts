@@ -115,13 +115,15 @@ data <- mutate(data, C_f = NULL,RF_f = NULL, CP_f = NULL, STUDY_f = NULL)
 head(data)
 ```
 
-Same idea as we had in event objects:
+Same idea as we had in event object
+
 
 ```{r, message = FALSE}
 out <- mrgsim(mod, data, recover = "WT,CRCL,STUDY,HEPATIC,RENAL")
 ```
 
 We copy either numeric, character, or factors into the output
+
 ```{r}
 as_tibble(out)
 ```
