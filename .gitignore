@@ -1,6 +1,5 @@
 build
 *_cache
 _posts/*/*_files
-_posts/*/*.html
 _posts/*/build
 docs/*/build
