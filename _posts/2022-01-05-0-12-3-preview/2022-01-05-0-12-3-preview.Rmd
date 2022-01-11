@@ -215,3 +215,20 @@ omat(mod)
 mod <- collapse_omega(mod, range = c(2, NA), name = "remainder")
 omat(mod)
 ```
+
+
+# Pull Requests
+
+A lot of the details around these new features were hammered out on public
+pull requests
+
+- https://github.com/metrumresearchgroup/mrgsolve/pull/891
+- https://github.com/metrumresearchgroup/mrgsolve/pull/892
+- https://github.com/metrumresearchgroup/mrgsolve/pull/900
+- https://github.com/metrumresearchgroup/mrgsolve/pull/901
+- https://github.com/metrumresearchgroup/mrgsolve/pull/907
+
+Any further feedback or perspective on these changes or any testing that you 
+can do before release is always appreciated. 
+
+
