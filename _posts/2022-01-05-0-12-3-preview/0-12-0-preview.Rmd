@@ -8,6 +8,8 @@ author:
     affiliation: Team mrgsolve
     affiliation_url: https://mrgsolve.org
 date: "`r Sys.Date()`"
+categories:
+  - what's new
 output: 
   distill::distill_article: 
     toc: true
