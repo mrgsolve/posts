@@ -1,0 +1,20 @@
+---
+title: "The title"
+description: |
+  Description
+categories: 
+  - template
+date: 2017-02-01
+draft: true
+output: 
+  distill::distill_article: 
+    toc: true
+    highlight: pygments
+    highlight_downlit: false 
+    theme: dist.css
+---
+
+```{r mixture_model_setup,echo=FALSE, include = FALSE}
+knitr::opts_chunk$set(message=FALSE, comment='.',  autodep=TRUE)
+```
+

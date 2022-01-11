@@ -21,26 +21,29 @@
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>mrgsolve.org/posts: mrgsolve blog</title>
+  <title>mrgsolve.org/posts: About this site</title>
 
+  <meta property="description" itemprop="description" content="Some additional details about the website"/>
 
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="mrgsolve.org/posts: mrgsolve blog"/>
+  <meta property="og:title" content="mrgsolve.org/posts: About this site"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Some additional details about the website"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="mrgsolve.org/posts"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="mrgsolve.org/posts: mrgsolve blog"/>
+  <meta property="twitter:title" content="mrgsolve.org/posts: About this site"/>
+  <meta property="twitter:description" content="Some additional details about the website"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","theme","listing"]}},"value":[{"type":"character","attributes":{},"value":["mrgsolve blog"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["dist.css"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["About this site"]},{"type":"character","attributes":{},"value":["Some additional details about the website"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2317,12 +2320,12 @@
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"mrgsolve blog","authors":[]}
+{"title":"About this site","description":"Some additional details about the website","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2359,273 +2362,12 @@ Resources
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).on("load", function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash && window.location.hash.startsWith("#category:")) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace(/^#category:/, "");
-      page_category = decodeURIComponent(page_category)
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if ((page_category || '').toLowerCase() === "articles" || category === page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + decodeURIComponent(window.location.hash) + '"]').addClass('active');
-
-      // update the list_caption
-      var list_caption = $('.posts-list-caption');
-      var caption = (page_category || '').toLowerCase() === "articles"
-        ? list_caption.attr('data-caption')
-        : ('Category: ' + page_category.replace(/_/g," "));
-      list_caption.text(caption);
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-      // reset list caption
-      var list_caption = $('.posts-list-caption');
-      list_caption.text(list_caption.attr('data-caption'));
-
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // click handling for tags
-  $('.dt-tag').click(function(ev) {
-    window.location.hash = '#category:' + $(this).text().replace(/ /g, "_");
-    return false;
-  })
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
-<div class="posts-list">
-<h1 class="posts-list-caption" data-caption="mrgsolve blog">mrgsolve blog</h1>
-<a href="posts/2022-01-05-0-12-3-preview/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Jan. 11, 2022</div>
-<div class="dt-authors">
-<div class="dt-author">Kyle Baron</div>
-</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Coming up in the next version</h2>
-<div class="dt-tags"></div>
-<p>This article gives a preview of what is to come in the next mrgsolve release.</p>
-</div>
-</a>
-<a href="posts/2021-05-11-new-0-11-0/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":["what's new"]}</script>
-<div class="metadata">
-<div class="publishedDate">May 11, 2021</div>
-<div class="dt-authors"></div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-05-11-new-0-11-0/distill-preview.png"/>
-</div>
-<div class="description">
-<h2>New in 0.11.0 and 0.11.1</h2>
-<div class="dt-tags">
-<div class="dt-tag">what's new</div>
-</div>
-<p>Changes and new features for mrgsolve versions 0.11.0 and 0.11.1.</p>
-</div>
-</a>
-<a href="posts/2020-12-20-recover/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":["new feature"]}</script>
-<div class="metadata">
-<div class="publishedDate">Dec. 20, 2020</div>
-<div class="dt-authors"></div>
-</div>
-<div class="thumbnail">
-<img src="posts/2020-12-20-recover/distill-preview.png"/>
-</div>
-<div class="description">
-<h2>Recover non-numeric data columns from data/idata sets</h2>
-<div class="dt-tags">
-<div class="dt-tag">new feature</div>
-</div>
-<p>For a long time, we've had `carry_out`, which copies numeric input data set 
-items into your simulated output. Now, `recover` does the same thing but will
-carry any data type from the input to output data.</p>
-</div>
-</a>
-<a href="posts/2019-01-17-events/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":["events"]}</script>
-<div class="metadata">
-<div class="publishedDate">Jan. 17, 2019</div>
-<div class="dt-authors"></div>
-</div>
-<div class="thumbnail">
-<img src="posts/2019-01-17-events/distill-preview.png"/>
-</div>
-<div class="description">
-<h2>Work with event objects</h2>
-<div class="dt-tags">
-<div class="dt-tag">events</div>
-</div>
-<p>Event objects are a simple way to implement dosing or other interventions
-into your simulation. They are created with special constructors and elementary
-events can be combined in different ways to create complex dosing regimens.</p>
-</div>
-</a>
-<a href="posts/2017-02-01-mixture-model/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":["mixture model"]}</script>
-<div class="metadata">
-<div class="publishedDate">Feb. 1, 2017</div>
-<div class="dt-authors"></div>
-</div>
-<div class="thumbnail">
-<img src="posts/2017-02-01-mixture-model/distill-preview.png"/>
-</div>
-<div class="description">
-<h2>Mixture model example</h2>
-<div class="dt-tags">
-<div class="dt-tag">mixture model</div>
-</div>
-<p>In NONMEM, `$MIXTURE` will allow you to estimate mixture models, where
-individuals are classified in to two or more populations with 
-a certain probability. It is straightforward to simulate from models like 
-these in your `mrgsolve` model code.</p>
-</div>
-</a>
-</div>
-<div class="posts-sidebar">
-<div class="sidebar-section categories">
-<h3>Categories</h3>
-<ul>
-<li>
-<a href="#category:articles">articles</a>
-<span class="category-count">(5)</span>
-</li>
-<li>
-<a href="#category:events">events</a>
-<span class="category-count">(1)</span>
-</li>
-<li>
-<a href="#category:mixture_model">mixture model</a>
-<span class="category-count">(1)</span>
-</li>
-<li>
-<a href="#category:new_feature">new feature</a>
-<span class="category-count">(1)</span>
-</li>
-<li>
-<a href="#category:what&#39;s_new">what's new</a>
-<span class="category-count">(1)</span>
-</li>
-</ul>
-</div>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>mrgsolve blog</h1>
+<h1>About this site</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p><p>Some additional details about the website</p></p>
 </div>
 
 

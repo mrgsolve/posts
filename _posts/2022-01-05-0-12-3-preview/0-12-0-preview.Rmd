@@ -1,25 +1,215 @@
 ---
-title: "Coming up in 0.12.0"
+title: "Coming up in the next version"
 description: |
-  A new article created using the Distill format.
+  This article gives a preview of what is to come in the next mrgsolve release.
 author:
-  - name: Nora Jones 
-    url: https://example.com/norajones
-    affiliation: Spacely Sprockets
-    affiliation_url: https://example.com/spacelysprokets
+  - name: Kyle Baron
+    url: https://github.com/kylebaron
+    affiliation: Team mrgsolve
+    affiliation_url: https://mrgsolve.org
 date: "`r Sys.Date()`"
-output: distill::distill_article
+output: 
+  distill::distill_article: 
+    toc: true
+    toc_float: true
+    number_sections: true
+    highlight: pygments
+    highlight_downlit: false 
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+library(mrgsolve)
+library(tidyverse)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web. 
+There are a bunch of new features coming up in the next mrgsolve release. Most 
+of these are related to model syntax (what / how you write your model in the 
+`.mod` or `.cpp` file) rather than model functionality. 
 
-Learn more about using Distill for R Markdown at <https://rstudio.github.io/distill>.
+# Use THETA(n) to refer to THETAn
+
+All models will be able to use `THETA(n)` to refer to `THETAn`. For example:
 
 
+```{c, eval = FALSE}
+[ nmxml ] 
+run = 100
+root = "cppfile"
+
+[ main ] 
+double CL = THETA(1) * pow(WT/70, 0.75);
+```
+
+You'll notice that we referred to a nonmem run with `[ nmxml ]` so this syntax
+is meant be one small step toward making it easier to translate your model 
+from the nonmem control stream to mrgsolve format. This is pretty simple, but 
+will mean less time removing parentheses when copying over model code. 
+
+# New plugin called `autodec`
+
+Plugins are extra functionality that you can invoke when coding your model. 
+For example, plugins exist for calculating time after dose, adding Rcpp 
+functionality to your model etc and [more](https://mrgsolve.org/user_guide/model-specification.html#block-plugin).
+
+One new plugin is called `autodec`. This plugin will automatically declare 
+C++ variables for you. For example, I can code the snipped from the previous
+block using `autodec` plugin and mrgsolve will discover that `CL` needs to be
+declared:
+
+```{c, eval = FALSE}
+[ plugin ] autodec
+
+[ nmxml ] 
+run = 100
+root = "cppfile"
+
+[ main ] 
+CL = THETA(1) * pow(WT/70, 0.75);
+```
+
+The motivation behind this feature is to make it easier to code models with 
+lots of variables when all your variables are simple double precision floating 
+point numbers.
+
+# New plugin called `nm-vars`
+
+This plugin provided a nonmem-like syntax for _certain model elements_, 
+including 
+
+- `Fn`, `Dn`, `Rn`, and `ALAGn`
+- `A(n)`, `A_0(n)` and `DADT(n)`
+
+So your mrgsolve model translated from nonmem might look like this
+
+```{r, results = "hide"}
+see(modlib("1005"))
+```
+
+```{c, eval=FALSE, code = modlib("1005", compile = FALSE)@code}
+
+```
+
+where I updated the internal model `1005` to reflect use of both `autodec` and 
+`nm-vars` plugins. 
+
+Notice that __not all nonmem syntax is supported__; just select data structures
+that use `A` and `DADT` to refer to compartments and differential equations.
+Also notice that we still require `;` at the end of each line and we still 
+need to use `pow(base, exponent)` to calculate exponent of some number. 
+
+I'll have full documentation in the user guide once the release is made. 
 
 
+# New time spacer for event sequences
 
+The new feature is an `ii` spacer for sequences of event objects. 
+
+Using [event objects](https://mrgsolve.org/user_guide/event-chapter.html), 
+we can create complicated dosing regimens from simpler ones. For example, we
+might have a week of 50 mg dosing followed by a week of 100 mg dosing and then 
+up to 200 mg dosing. We can accomplish that with an event sequence
+
+First create the individual pieces
+
+```{r}
+a <- ev(amt = 50,  ii = 24, addl = 6)
+b <- ev(amt = 100, ii = 24, addl = 6)
+c <- ev(amt = 200, ii = 24, addl = 6)
+```
+
+Then put them in a sequence
+
+```{r}
+data <- ev_seq(a, b, c)
+data
+```
+
+When they are sequenced, you'll see that the second piece (`b`) starts one
+dosing interval after the last dose in the first piece (`a`). 
+
+We can put a 24 hour spacer between `a` and `b`
+
+```{r}
+seq(a, wait = 24, b)
+```
+
+Here, the last dose in `a` is given, we wait one dosing interval (24 hours) then 
+wait another 24 hours (via `wait`) and then start `b`. 
+
+Rather than using `wait`, we can use `ii` to specify the amount of time 
+from the last dose in `a` to the first dose in `b`. So if we want to wait 3 days
+between the last dose in `a` and the first dose in `b`
+
+```{r}
+ev_seq(a, ii = 3*24, b)
+```
+
+Notice that this same behavior can be achieved with `wait` but using `ii` 
+might be easier to interpret in some cases. 
+
+#  Collapse matrices
+
+Sometimes in your model, you have multiple OMEGA or SIGMA blocks like this
+
+```{r}
+code <- '
+$OMEGA  @name first
+1 2 3
+
+$OMEGA @name second
+4
+'
+mod <- mcode("collapse", code, compile = FALSE)
+
+omat(mod)
+```
+
+
+If I want to update these values but I only have a 4x4 matrix
+
+```{r, include = FALSE}
+mat <- as.matrix(omat(mod))  / 10
+
+```
+
+```{r}
+mat
+```
+
+I can't do it; mrgsolve wants a 3x3 matrix for the first slot and 1x1 matrix
+for the second. 
+
+A new function will collapse the model matrix into larger matrices
+
+```{r}
+mod <- collapse_omega(mod)
+omat(mod)
+```
+
+```{r}
+mod <- update(mod, omat = mat)
+omat(mod)
+```
+
+You can't split matrices up into smaller chunks, but if there are more than 
+two blocks, you can select which blocks to join
+
+```{r}
+code <- '
+$OMEGA  @name first
+1 2 3
+
+$OMEGA @name second
+4
+
+$OMEGA @name third
+5 6 7 8
+'
+mod <- mcode("collapse2", code, compile = FALSE)
+
+omat(mod)
+
+mod <- collapse_omega(mod, range = c(2, NA), name = "remainder")
+omat(mod)
+```
